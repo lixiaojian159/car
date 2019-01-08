@@ -22,9 +22,11 @@
       <blockquote class="layui-elem-quote"><!-- 每个tr 上有两个属性 cate-id='1' 当前分类id fid='0' 父级id ,顶级分类为 0，有子分类的前面加收缩图标 --><i class="layui-icon x-show" status='true'>&#xe623;</i>操作之后,请点击右上角的'刷新'按钮</blockquote>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+        <a class="layui-btn layui-btn-default" href="javascript:;" id="npx">排序</a>
         <span class="x-right" style="line-height:40px">共有数据：{$count} 条</span>
       </xblock>
-      <table class="layui-table layui-form">
+     <!--  <form id="form"> -->
+      <table class="layui-table layui-form" id="form">
         <thead>
           <tr>
             <th width="20">
@@ -50,7 +52,7 @@
             </td>
             <td><!-- <input type="text" class="layui-input x-sort" name="order" value="0"> --></td>
             <td>
-              <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">
+              <!-- <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch" lay-filter="switchTest" data-id='{$HighCate.id}'> -->
             </td>
             <td class="td-manage">
               <button class="layui-btn layui-btn layui-btn-xs"  onclick="x_admin_show('编辑','{:url(\'admin/Cate/update\',[\'id\'=>$HighCate.id])}',500,200)" ><i class="layui-icon">&#xe642;</i>编辑</button>
@@ -68,9 +70,9 @@
               &nbsp;&nbsp;&nbsp;&nbsp;
               ├{$middle.name}
             </td>
-            <td><input type="text" class="layui-input x-sort" name="order" value="{$middle.npx}"></td>
+            <td><input type="text" class="layui-input x-sort" name="npx[{$middle.id}]" value="{$middle.npx}" class="npxs"></td>
             <td>
-              <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">
+              <input type="checkbox" name="switch"  lay-text="开启|停用"  {eq name="$middle.status" value="1"}checked=""{/eq} lay-skin="switch" lay-filter="switchTest" data-id='{$middle.id}'>
             </td>
             <td class="td-manage">
               <button class="layui-btn layui-btn layui-btn-xs"  onclick="x_admin_show('编辑','{:url(\'admin/Cate/update\',[\'id\'=>$middle.id])}',500,300)" ><i class="layui-icon">&#xe642;</i>编辑</button>
@@ -81,13 +83,30 @@
           {/volist}
         </tbody>
       </table>
+    <!-- </form> -->
     </div>
     <style type="text/css">
       
     </style>
     <script>
       layui.use(['form'], function(){
-        form = layui.form;
+        var form = layui.form
+        ,layer = layui.layer;
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+          var id = $(this).attr('data-id');
+          var status = this.checked;
+          if(status){
+            status = 1;
+          }else{
+            status = 0;
+          }
+          var data = {'id':id,'status':status};
+          var url  = '{:url("admin/Cate/status")}';
+          $.post(url,data,function(result){});
+          
+        });
         
       });
 
@@ -165,6 +184,27 @@
           });
         }
     },'JSON')
+  })
+
+  $("#npx").click(function(){
+    var data = $('#form').serialize();
+    var url  = '{:url("admin/Cate/npx")}';
+    console.log(data);
+
+    // $.post(url,data,function(result){
+    //   if(result.code){
+    //     layui.use('layer', function(){
+    //         var layer = layui.layer;
+            
+    //         layer.open({
+    //           title: '处理结果'
+    //           ,icon: 6
+    //           ,content: result.msg
+    //         }); 
+
+    //       });
+    //   }
+    // },'JSON');
   })
 </script>
   </body>

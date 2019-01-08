@@ -113,6 +113,24 @@ class Cate extends Controller{
 
 	//修改状态
 	public function status(){
-		
+		$id = Request::post('id');
+		$status = Request::post('status');
+		$res = CateModel::where('id',$id)->setField('status',$status);
+	}
+
+	//排序
+	public function npx(){
+		$npx  = Request::post('npx');
+		$data = [];
+		foreach($npx as $key => $val){
+			$data[$key]['id'] = $key;
+			$data[$key]['npx']= $val;
+		}
+		// dump($data);
+		$CateModel = new CateModel();
+		$res = $CateModel->saveAll($data);
+		if($res){
+			return ['code' => 1,'msg' => '排序成功'];
+		}
 	}
 }

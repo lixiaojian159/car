@@ -1,0 +1,172 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+ <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">合力叉车/配件</a>
+        <a>
+          <cite>分类管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so layui-form-pane">
+          <input class="layui-input" placeholder="分类名" name="name">
+          <a class="layui-btn"  lay-submit="" lay-filter="sreach" href="javascript:;" id="add"><i class="layui-icon"></i>增加</a>
+        </form>
+      </div>
+      <blockquote class="layui-elem-quote"><!-- 每个tr 上有两个属性 cate-id='1' 当前分类id fid='0' 父级id ,顶级分类为 0，有子分类的前面加收缩图标 --><i class="layui-icon x-show" status='true'>&#xe623;</i>操作之后,请点击右上角的'刷新'按钮</blockquote>
+      <xblock>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+        <span class="x-right" style="line-height:40px">共有数据：{$count} 条</span>
+      </xblock>
+      <table class="layui-table layui-form">
+        <thead>
+          <tr>
+            <th width="20">
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th width="70">ID</th>
+            <th>栏目名</th>
+            <th width="50">排序</th>
+            <th width="50">状态</th>
+            <th width="220">操作</th>
+        </thead>
+        <tbody class="x-cate">
+
+          {volist name="HighCates" id="HighCate"}
+          <tr cate-id='{$HighCate.id}' fid='0' >
+            <td>
+              <!-- <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$HighCate.id}'><i class="layui-icon">&#xe605;</i></div> -->
+            </td>
+            <td>{$HighCate.id}</td>
+            <td>
+              
+              <i class="layui-icon x-show" status='true'>&#xe623;</i>{$HighCate.name}
+            </td>
+            <td><!-- <input type="text" class="layui-input x-sort" name="order" value="0"> --></td>
+            <td>
+              <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">
+            </td>
+            <td class="td-manage">
+              <button class="layui-btn layui-btn layui-btn-xs"  onclick="x_admin_show('编辑','{:url(\'admin/Cate/update\',[\'id\'=>$HighCate.id])}',500,200)" ><i class="layui-icon">&#xe642;</i>编辑</button>
+              <button class="layui-btn layui-btn-warm layui-btn-xs"  onclick="x_admin_show('添加','{:url(\'admin/Cate/addmiddle\',[\'pid\'=>$HighCate[\'id\']])}',500,300)" ><i class="layui-icon">&#xe642;</i>添加子栏目</button>
+              <button class="layui-btn-danger layui-btn layui-btn-xs"  onclick="member_del(this,'{$HighCate.id}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
+            </td>
+          </tr>
+          {volist name="HighCate.middle" id="middle"}
+          <tr cate-id='{$middle.id}' fid='{$middle.pid}' >
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$middle.id}'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{$middle.id}</td>
+            <td>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              ├{$middle.name}
+            </td>
+            <td><input type="text" class="layui-input x-sort" name="order" value="{$middle.npx}"></td>
+            <td>
+              <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">
+            </td>
+            <td class="td-manage">
+              <button class="layui-btn layui-btn layui-btn-xs"  onclick="x_admin_show('编辑','{:url(\'admin/Cate/update\',[\'id\'=>$middle.id])}',500,300)" ><i class="layui-icon">&#xe642;</i>编辑</button>
+              <button class="layui-btn-danger layui-btn layui-btn-xs"  onclick="member_del(this,'{$middle.id}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
+            </td>
+          </tr>
+           {/volist}
+          {/volist}
+        </tbody>
+      </table>
+    </div>
+    <style type="text/css">
+      
+    </style>
+    <script>
+      layui.use(['form'], function(){
+        form = layui.form;
+        
+      });
+
+      
+
+      /*用户-删除*/
+      function member_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+            console.log(index);
+              //发异步删除数据
+              if(index){
+                $.post('{:url("admin/Cate/delete")}',{'id':id},function(result){
+                  if(result.code){
+                    $(obj).parents("tr").remove();
+                    layer.msg(result.msg,{icon:1,time:1000});
+                  }else{
+                    layer.msg(result.msg,{icon:5,time:1000});
+                  }
+                },'JSON')
+              }
+
+          });
+      }
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？',function(index){
+            //捉到所有被选中的，发异步进行删除
+            if(index){
+              $.post('{:url("admin/Cate/delAll")}',{'ids':data},function(result){
+                if(result.code){
+                  layer.msg(result.msg, {icon: 1});
+                  $(".layui-form-checked").not('.header').parents('tr').remove();
+                }else{
+                  layer.msg(result.msg, {icon: 5});
+                }
+              },'JSON')
+            }
+        });
+      }
+    </script>
+<script>
+  $("#add").click(function(){
+    var name = $('input[name="name"]').val();
+    var pid  = 0;
+    var data = {'name':name,'pid':pid};
+    var url  = '{:url("admin/Cate/add")}';
+
+    $.post(url,data,function(result){
+        if(result.code){
+          layui.use('layer', function(){
+            var layer = layui.layer;
+            
+            layer.open({
+              title: '处理结果'
+              ,icon: 6
+              ,content: result.msg
+            }); 
+
+          });
+        }else{
+          layui.use('layer', function(){
+            var layer = layui.layer;
+            
+            layer.open({
+              title: '处理结果'
+              ,icon: 5
+              ,content: result.msg
+            }); 
+
+          });
+        }
+    },'JSON')
+  })
+</script>
+  </body>
+
+{/block}

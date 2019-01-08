@@ -1,0 +1,23 @@
+{include file="layouts:meta" /}
+<body>
+    <!-- 顶部开始 -->
+    {include file="layouts:header" /}
+    <!-- 顶部结束 -->
+
+    <!-- 中部开始 -->
+    <!-- 左侧菜单开始 -->
+    {include file="layouts:aside" /}
+    <!-- <div class="x-slide_left"></div> -->
+    <!-- 左侧菜单结束 -->
+    <!-- 右侧主体开始 -->
+    {block name="main"}
+    网站主体
+    {/block}
+    <div class="page-content-bg"></div>
+    <!-- 右侧主体结束 -->
+    <!-- 中部结束 -->
+    <!-- 底部开始 -->
+    {include file="layouts:footer" /}
+    <!-- 底部结束 -->
+</body>
+</html>

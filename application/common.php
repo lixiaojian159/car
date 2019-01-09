@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-
+use think\Db;
 /**
  * [getStringByArr  把一维数组转化为字符串]
  * @param  [array]  $arr [一维数组]
@@ -22,4 +22,14 @@ function getStringByArr($arr){
 		$str .= ','.$val;
 	}
 	return $str;
+}
+
+/**
+ * [getCateNameById 通过id, 获取分类名称]
+ * @param  [int]    $id
+ * @return [string]    
+ */
+function getCateNameById($id){
+	$cate = Db::table('cate')->where('id',$id)->find();
+	return $cate['name'];
 }

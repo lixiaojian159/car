@@ -70,7 +70,7 @@
               &nbsp;&nbsp;&nbsp;&nbsp;
               ├{$middle.name}
             </td>
-            <td><input type="text" class="layui-input x-sort" name="npx[{$middle.id}]" value="{$middle.npx}" class="npxs"></td>
+            <td><input type="text" class="layui-input x-sort npxs" name="npx[{$middle.id}]" value="{$middle.npx}" data-id="{$middle.id}"></td>
             <td>
               <input type="checkbox" name="switch"  lay-text="开启|停用"  {eq name="$middle.status" value="1"}checked=""{/eq} lay-skin="switch" lay-filter="switchTest" data-id='{$middle.id}'>
             </td>
@@ -187,24 +187,29 @@
   })
 
   $("#npx").click(function(){
-    var data = $('#form').serialize();
+      var data = {};
+      $('.npxs').each(function(i){
+        var id  = $(this).attr('data-id');
+        var npx = $(this).val();
+        data[id]= npx;
+      })
     var url  = '{:url("admin/Cate/npx")}';
-    console.log(data);
+    
 
-    // $.post(url,data,function(result){
-    //   if(result.code){
-    //     layui.use('layer', function(){
-    //         var layer = layui.layer;
+    $.post(url,data,function(result){
+      if(result.code){
+        layui.use('layer', function(){
+            var layer = layui.layer;
             
-    //         layer.open({
-    //           title: '处理结果'
-    //           ,icon: 6
-    //           ,content: result.msg
-    //         }); 
+            layer.open({
+              title: '处理结果'
+              ,icon: 6
+              ,content: result.msg
+            }); 
 
-    //       });
-    //   }
-    // },'JSON');
+          });
+      }
+    },'JSON');
   })
 </script>
   </body>

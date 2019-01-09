@@ -1,0 +1,215 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">合力叉车/配件</a>
+        <a>
+          <cite>叉车配件</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+        <div class="layui-input-inline">
+         <select class="layui-input-inline" name="cate_id" lay-verify="" id="cate_id">
+              {volist name="cates" id="cate"}
+              <option value="{$cate.id}" {eq name="$cate.id" value="$cateId"}selected{/eq}>{$cate.name}</option>
+              {/volist}
+         </select>
+         </div>
+         <!-- <div class="layui-input-inline">
+          <input type="text" class="layui-input" name="name"  placeholder="请输入配件名称" autocomplete="off">
+         </div> -->
+         <div class="layui-input-inline">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </div>
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+        <button class="layui-btn" onclick="x_admin_show('添加用户','{:url(\'admin/Peijian/add\')}',800,600)"><i class="layui-icon"></i>添加</button>
+        <a class="layui-btn" href="javascript:;" id="npx">排序</a>
+        <span class="x-right" style="line-height:40px">共有数据：{$count}条</span>
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>ID</th>
+            <th>配件分类</th>
+            <th>配件名称</th>
+            <th>展示图片</th>
+            <th>创建时间</th>
+            <th width="70px">排序</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {volist name="peijians" id="peijian"}
+          <tr>
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$peijian.id}'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{$peijian.id}</td>
+            <td>{$peijian.cate_id|getCateNameById}</td>
+            <td>{$peijian.name}</td>
+            <td><img src="{$peijian.pic}" width="100"></td>
+            <td>{$peijian.create_time}</td>
+            <td><input type="text" class="layui-input npxs" name="npx[{$peijian.id}]" value="{$peijian.npx}" data-id="{$peijian.id}"></td>
+            <td class="td-status">
+              {eq name="$peijian.status" value="1"}
+              <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
+              {else /}
+              <span class="layui-btn layui-btn-disabled layui-btn-mini">已停用</span></td>
+              {/eq}
+            <td class="td-manage">
+              <a onclick="member_stop(this,'{$peijian.id}')" href="javascript:;"  title="{eq name="$peijian.status" value="1"}启用{else /}停用{/eq}">
+                <i class="layui-icon">{eq name="$peijian.status" value="1"}&#xe601;{else /}&#xe62f;{/eq}</i>
+              </a>
+              <a onclick="x_admin_show('编辑','{:url(\'admin/Peijian/update\',[\'id\'=>$peijian.id])}',600,600)" title="编辑" href="javascript:;">
+                <i class="layui-icon">&#xe631;</i>
+              </a>
+              <a title="删除" onclick="member_del(this,'{$peijian.id}')" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+              </a>
+            </td>
+          </tr>
+          {/volist}
+
+        </tbody>
+      </table>
+      <div class="page">
+        <!-- <div>
+          <a class="prev" href="">&lt;&lt;</a>
+          <a class="num" href="">1</a>
+          <span class="current">2</span>
+          <a class="num" href="">3</a>
+          <a class="num" href="">489</a>
+          <a class="next" href="">&gt;&gt;</a>
+        </div> -->
+        {$peijians|raw}
+      </div>
+
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+       /*用户-停用*/
+      function member_stop(obj,id){
+        console.log(id);
+          layer.confirm('确认要要修改当前状态吗？',function(index){
+
+            if(index){
+
+                if($(obj).attr('title')=='启用'){
+                   var status = 0;
+                }else{
+                   var status = 1;
+                }
+                var data = {'id':id,'status':status};
+                var url  = '{:url("admin/peijian/status")}';
+                $.post(url,data,function(result){
+                  if(result.code){
+                      if($(obj).attr('title')=='启用'){
+                        var status = 0;
+                        //发异步把用户状态进行更改
+                        $(obj).attr('title','停用')
+                        $(obj).find('i').html('&#xe62f;');
+
+                        $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                        layer.msg('已停用!',{icon: 5,time:1000});
+
+                      }else{
+                        var status = 1;
+                        $(obj).attr('title','启用')
+                        $(obj).find('i').html('&#xe601;');
+
+                        $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                        layer.msg('已启用!',{icon: 6,time:1000});
+                      }
+                  }
+                },'JSON')
+
+            }
+          });
+      }
+
+      /*用户-删除*/
+      function member_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+              if(index){
+                var data = {'id':id};
+                var url  = '{:url("admin/Peijian/delete")}';
+                $.post(url,data,function(result){
+                  if(result.code){
+                     $(obj).parents("tr").remove();
+                     layer.msg(result.msg,{icon:1,time:1000});
+                  }else{
+                     layer.msg(result.msg,{icon:5,time:1000});
+                  }
+                },'JSON')
+              }
+          });
+      }
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            if(index){
+              var datas = {'npx':data};
+              var url = '{:url("admin/Peijian/delAll")}';
+              $.post(url,datas,function(result){
+                if(result.code){
+                  layer.msg(result.msg, {icon: 1});
+                  $(".layui-form-checked").not('.header').parents('tr').remove();
+                }else{
+                  layer.msg(result.msg, {icon: 5});
+                }
+              },'JSON');
+            }
+        });
+      }
+    </script>
+    <script>
+      $("#npx").click(function(){
+        var data = {};
+        $('.npxs').each(function(i){
+          var id  = $(this).attr('data-id');
+          var npx = $(this).val();
+          data[id]= npx;
+        })
+        var url = '{:url("admin/Peijian/npx")}';
+        $.post(url,data,function(result){
+          layer.msg('排序成功', {icon: 1});
+        },'JSON');
+      })
+    </script>
+  </body>
+
+{/block}

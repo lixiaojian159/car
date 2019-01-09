@@ -13,4 +13,8 @@ class Test extends Controller{
 	public function user(){
 		return $this->view->fetch();
 	}
+
+	public function test(){
+		dump(getCateNameById(2));
+	}
 }

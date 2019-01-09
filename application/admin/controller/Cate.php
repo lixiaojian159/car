@@ -120,7 +120,7 @@ class Cate extends Controller{
 
 	//排序
 	public function npx(){
-		$npx  = Request::post('npx');
+		$npx  = Request::post();
 		$data = [];
 		foreach($npx as $key => $val){
 			$data[$key]['id'] = $key;

@@ -13,6 +13,14 @@ class Image extends Controller{
 		if($info){
 			$path = '/uploads/'.$info->getSaveName();
 			return ['code' => 0, 'msg' => 'success', 'data' => [ 'url' => $path]];
+		}else{
+			echo $file->getError();
 		}
+	}
+
+	//多图上传
+	public function uploads(){
+		$file = request()->file();
+		dump($file);
 	}
 }

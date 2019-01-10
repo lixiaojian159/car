@@ -33,3 +33,14 @@ function getCateNameById($id){
 	$cate = Db::table('cate')->where('id',$id)->find();
 	return $cate['name'];
 }
+
+/**
+ * [getImageByArr 根据多照片的string, 获取第一张照片]
+ * @param  [type] $arr [description]
+ * @return [type]      [description]
+ */
+function getImageByArr($arr){
+	$arr = explode('@@@',$arr);
+	array_shift($arr);
+	return $arr[0];
+}

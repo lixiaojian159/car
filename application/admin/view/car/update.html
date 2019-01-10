@@ -3,70 +3,38 @@
 {block name="main"}
 <body>
     <div class="x-body">
-        <form class="layui-form" action="{:url('admin/Car/addDo')}" enctype="multipart/form-data" method="post">
-
-<!--           <div class="layui-form-item">
-              <label for="username" class="layui-form-label">
-                  <span class="x-red">*</span>车辆名称
-              </label>
-              <div class="layui-input-inline">
-                 <input type="text" id="username" name="name" required="" lay-verify="required"
-                  autocomplete="off" class="layui-input">
-              </div>
-              <div class="layui-form-mid layui-word-aux">
-                  <span class="x-red">*</span>请注意字数...
-              </div>
-          </div>
-
+        <form class="layui-form" action="{:url('admin/Car/updateDo')}" enctype="multipart/form-data" method="post">
+      
+          <input type="hidden" name="id" value="{$car.id}">
           <div class="layui-form-item">
-              <label for="username" class="layui-form-label">
-                  <span class="x-red">*</span>描述1(高度)
-              </label>
-              <div class="layui-input-inline">
-                 <input type="text" id="username" name="hight" required="" lay-verify="required"
-                  autocomplete="off" class="layui-input">
-              </div>
-          </div>
+		    <label class="layui-form-label">车辆名称</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="name" lay-verify="title" autocomplete="off" class="layui-input" value="{$car.name}">
+		    </div>
+		  </div>
 
-          <div class="layui-form-item">
-              <label for="username" class="layui-form-label">
-                  <span class="x-red">*</span>描述2(中心)
-              </label>
-              <div class="layui-input-inline">
-                 <input type="text" id="username" name="center" required="" lay-verify="required"
-                  autocomplete="off" class="layui-input">
-              </div>
-          </div> -->
-
-          <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>车辆名称</label>
-            <div class="layui-input-block">
-              <input type="text" name="name" lay-verify="title" autocomplete="off" class="layui-input">
-            </div>
-          </div>
-
-          <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>描述(首页置顶)</label>
-            <div class="layui-input-block">
-              <input type="text" name="best" lay-verify="title" autocomplete="off" class="layui-input">
-            </div>
-          </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label"><span class="x-red">*</span>描述(首页置顶)</label>
+        <div class="layui-input-block">
+          <input type="text" name="best" lay-verify="title" autocomplete="off" class="layui-input" value="{$car.best}">
+        </div>
+      </div>
 
 
           <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>描述1(高度)</label>
-            <div class="layui-input-block">
-              <input type="text" name="hight" lay-verify="title" autocomplete="off" class="layui-input">
-            </div>
-          </div>
+		    <label class="layui-form-label">描述1(高度)</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="hight" lay-verify="title" autocomplete="off" class="layui-input" value="{$car.hight}">
+		    </div>
+		  </div>
 
 
            <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>描述2(中心)</label>
-            <div class="layui-input-block">
-              <input type="text" name="center" lay-verify="title" autocomplete="off" class="layui-input">
-            </div>
-          </div>
+		    <label class="layui-form-label">描述2(中心)</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="center" lay-verify="title" autocomplete="off" class="layui-input" value="{$car.center}">
+		    </div>
+		  </div>
 
           <div class="layui-form-item">
               <label for="username" class="layui-form-label">
@@ -95,7 +63,7 @@
            <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">案例描述</label>
             <div class="layui-input-block">
-              <textarea placeholder="请输入内容" class="layui-textarea" name="example"></textarea>
+              <textarea placeholder="请输入内容" class="layui-textarea" name="example">{$car.example}</textarea>
             </div>
           </div>
 
@@ -105,26 +73,37 @@
               </label>
               <div class="layui-input-inline">
                     <select name="cate_id" lay-verify="">
-                      <option value="">请选择...</option>
-                      {volist name="cates" id="cate"}
-                      <option value="{$cate.id}">{$cate.name}</option>
-                      {/volist}
-                    </select> 
+					    <option value="">请选择...</option>
+					    {volist name="cates" id="cate"}
+					    <option value="{$cate.id}" {eq name="$cate.id" value="$car.cate_id"}selected{/eq}>{$cate.name}</option>
+					    {/volist}
+				    </select> 
               </div>
               <div class="layui-form-mid layui-word-aux">
                   <span class="x-red">*</span>请选择叉车分类
               </div>
           </div>
 
-          <!-- <div class="layui-form-item">
+          <div class="layui-form-item">
               <label for="username" class="layui-form-label">
                   <span class="x-red">*</span>排序
               </label>
               <div class="layui-input-inline">
                  <input type="text" id="username" name="npx" required="" lay-verify="required"
-                  autocomplete="off" class="layui-input">
+                  autocomplete="off" class="layui-input" value="{$car.npx}">
               </div>
-          </div> -->
+          </div>
+
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>旧图片
+              </label>
+              {volist name="car.pics" id='pic'}
+              <div class="layui-input-inline">
+	              <img src="{$pic}" width="200" style="display: float">
+              </div>
+               {/volist}
+          </div>
 
           <div class="layui-form-item">
               <label for="username" class="layui-form-label">
@@ -145,7 +124,7 @@
           <div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
               </label>
-              <input type="submit" value="添加" class="layui-btn">
+              <input type="submit" value="修改" class="layui-btn">
           </div>
       </form>
     </div>
@@ -217,12 +196,11 @@
 <!-- 实例化编辑器 -->
 <script type="text/javascript">
     var ue = UE.getEditor('container',{
-      initialFrameWidth:1190,
-      initialFrameHeight:600
+      initialFrameWidth:1190
     });
     ue.ready(function() {
         //设置编辑器的内容
-        ue.setContent('hello');
+        ue.setContent('{$car.desc1|raw}');
         //获取html内容，返回: <p>hello</p>
         var html = ue.getContent();
     });
@@ -230,16 +208,14 @@
 
 <script type="text/javascript">
     var ue2 = UE.getEditor('container2',{
-      initialFrameWidth:1190,
-      initialFrameHeight:600
+      initialFrameWidth:1190
     });
     ue2.ready(function() {
         //设置编辑器的内容
-        ue2.setContent('hello');
+        ue2.setContent('{$car.desc2|raw}');
         //获取html内容，返回: <p>hello</p>
         var html = ue2.getContent();
     });
 </script>
 </body>
-
 {/block}

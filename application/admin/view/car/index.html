@@ -12,114 +12,155 @@
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
+    <blockquote class="layui-elem-quote"><!-- 每个tr 上有两个属性 cate-id='1' 当前分类id fid='0' 父级id ,顶级分类为 0，有子分类的前面加收缩图标 --><i class="layui-icon x-show" status='true'>&#xe623;</i>1.操作之后,请点击右上角的'刷新'按钮 2.首页置顶正能有5个产品
+    </blockquote>
     <div class="x-body">
       <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so">
-          <input class="layui-input" placeholder="开始日" name="start" id="start">
-          <input class="layui-input" placeholder="截止日" name="end" id="end">
-          <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+          <div class="layui-input-inline">
+            <select name="cate_id" lay-verify="">
+              {volist name="cates" id="cate"}
+              <option value="{$cate.id}" {eq name="$cate.id" value="$cateId"}selected{/eq}>{$cate.name}</option>
+              {/volist}
+            </select>
+          </div>
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','./member-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <!-- <button class="layui-btn" onclick="x_admin_show('添加用户','{:url(\'admin/Car/add\')}',1300,600)"><i class="layui-icon"></i>添加</button> -->
+        <a class="layui-btn" href="{:url('admin/Car/add')}"><i class="layui-icon"></i>添加</a>
+        <a class="layui-btn" href="javascript:;" id="npx">排序</a>
+        <span class="x-right" style="line-height:40px">共有数据：{$count} 条</span>
       </xblock>
-      <table class="layui-table">
+      <table class="layui-table layui-form">
         <thead>
           <tr>
             <th>
               <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
             </th>
             <th>ID</th>
-            <th>用户名</th>
-            <th>性别</th>
-            <th>手机</th>
-            <th>邮箱</th>
-            <th>地址</th>
-            <th>加入时间</th>
+            <th>叉车分类</th>
+            <th>叉车名称</th>
+            <th>展示图片</th>
+            <th>描述(高度)</th>
+            <th>描述(中心)</th>
+            <th>排序</th>
             <th>状态</th>
+            <th>置顶</th>
             <th>操作</th></tr>
         </thead>
         <tbody>
+          {volist name="cars" id="car"}
           <tr>
             <td>
-              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$car.id}'><i class="layui-icon">&#xe605;</i></div>
             </td>
-            <td>1</td>
-            <td>小明</td>
-            <td>男</td>
-            <td>13000000000</td>
-            <td>admin@mail.com</td>
-            <td>北京市 海淀区</td>
-            <td>2017-01-01 11:11:42</td>
+            <td>{$car.id}</td>
+            <td>{$car.cate_id|getCateNameById}</td>
+            <td>{$car.name|mb_substr=###,0,15}...</td>
+            <td><img src="{$car.pics|getImageByArr}" width="50"></td>
+            <td>{$car.hight|mb_substr=###,0,15}...</td>
+            <td>{$car.center|mb_substr=###,0,15}...</td>
+            <td><input type="text" class="layui-input npxs" name="npx[{$car.id}]" value="{$car.npx}" data-id="{$car.id}" size="1"></td>
             <td class="td-status">
+              {eq name="$car.status" value="1"}
               <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
+              {else /}
+              <span class="layui-btn layui-btn-disabled layui-btn-mini">已停用</span></td>
+              {/eq}
+            <td>
+              <input type="checkbox" name="switch"  lay-text="开启|停用"  {eq name="$car.top" value="1"}checked=""{/eq} lay-skin="switch" lay-filter="switchTest" data-id="{$car.id}">
+            </td>
+
             <td class="td-manage">
-              <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
-                <i class="layui-icon">&#xe601;</i>
+              <a onclick="member_stop(this,'{$car.id}')" href="javascript:;"  title="{eq name='$car.status' value='1'}启用{else /}停用{/eq}">
+                <i class="layui-icon">{eq name="$car.status" value="1"}&#xe601;{else /}&#xe62f;{/eq}</i>
               </a>
-              <a title="编辑"  onclick="x_admin_show('编辑','member-edit.html',600,400)" href="javascript:;">
-                <i class="layui-icon">&#xe642;</i>
-              </a>
-              <a onclick="x_admin_show('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
+              <a title="编辑" href="{:url('admin/Car/update',['id'=>$car.id])}">
                 <i class="layui-icon">&#xe631;</i>
               </a>
-              <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
+              <a title="删除" onclick="member_del(this,'{$car.id}')" href="javascript:;">
                 <i class="layui-icon">&#xe640;</i>
               </a>
             </td>
           </tr>
+          {/volist}
         </tbody>
       </table>
       <div class="page">
         <div>
-          <a class="prev" href="">&lt;&lt;</a>
+          <!-- <a class="prev" href="">&lt;&lt;</a>
           <a class="num" href="">1</a>
           <span class="current">2</span>
           <a class="num" href="">3</a>
           <a class="num" href="">489</a>
-          <a class="next" href="">&gt;&gt;</a>
+          <a class="next" href="">&gt;&gt;</a> -->
+          {$cars|raw}
         </div>
       </div>
 
     </div>
     <script>
-      layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#start' //指定元素
-        });
+      layui.use(['laydate','form'], function(){
+        var laydate = layui.laydate,
+            form = layui.form;
 
-        //执行一个laydate实例
-        laydate.render({
-          elem: '#end' //指定元素
-        });
+            //监听指定开关
+            form.on('switch(switchTest)', function(data){
+              console.log(this);
+              var id = $(this).attr('data-id');
+              var top;
+              var url = '{:url("admin/Car/top")}';
+              if(this.checked){
+                top = 1;
+              }else{
+                top = 0;
+              }
+              $.post(url,{'id':id,'top':top});
+              // layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+              //   offset: '6px'
+              // });
+              // layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+            });
       });
 
        /*用户-停用*/
       function member_stop(obj,id){
-          layer.confirm('确认要停用吗？',function(index){
+        
+          layer.confirm('你确定要修改状态吗？',function(index){
 
+            if(index){
+              var status;
               if($(obj).attr('title')=='启用'){
-
-                //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
-
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
-
+                status = 0;
               }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
-
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
+                status = 1;
               }
+              var data = {'id':id,'status':status};
+              var url  = '{:url("admin/Car/status")}';
+              $.post(url,data,function(result){
+                if(result.code){
+                    if($(obj).attr('title')=='启用'){
+
+                      //发异步把用户状态进行更改
+                      $(obj).attr('title','停用')
+                      $(obj).find('i').html('&#xe62f;');
+
+                      $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                      layer.msg('已停用!',{icon: 5,time:1000});
+
+                    }else{
+                      $(obj).attr('title','启用')
+                      $(obj).find('i').html('&#xe601;');
+
+                      $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                      layer.msg('已启用!',{icon: 6,time:1000});
+                    }
+                }
+              },'JSON')
+            }
               
           });
       }
@@ -127,6 +168,18 @@
       /*用户-删除*/
       function member_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
+            if(index){
+              var url = '{:url("admin/Car/del")}';
+              $.post(url,{'id':id},function(result){
+                if(result.code){
+                  //发异步删除数据
+                  $(obj).parents("tr").remove();
+                  layer.msg(result.msg,{icon:1,time:1000});
+                }else{
+                  layer.msg(result.msg,{icon:2,time:1000});
+                }
+              },'JSON');
+            }
               //发异步删除数据
               $(obj).parents("tr").remove();
               layer.msg('已删除!',{icon:1,time:1000});
@@ -138,14 +191,38 @@
       function delAll (argument) {
 
         var data = tableCheck.getData();
+
+        var dataPost = {'npx':data};
+        var url = '{:url("admin/Car/delAll")}';
   
-        layer.confirm('确认要删除吗？'+data,function(index){
-            //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
+        layer.confirm('确认要删除吗？',function(index){
+            if(index){
+              $.post(url,dataPost,function(result){
+                if(result.code){
+                    //捉到所有被选中的，发异步进行删除
+                    layer.msg(result.msg, {icon: 1});
+                    $(".layui-form-checked").not('.header').parents('tr').remove();
+                }else{
+                    layer.msg(result.msg, {icon: 6});
+                }
+              },'JSON');
+            }
+
         });
       }
     </script>
+<script>
+  $("#npx").click(function(){
+    var data = {};
+    $('.npxs').each(function(i){
+      data[$(this).attr('data-id')] = $(this).val();
+    })
+    var url = '{:url("admin/Car/npx")}';
+    $.post(url,data,function(result){
+      layer.msg('排序', {icon: 1});
+    },'JSON');
+  })
+</script>
   </body>
 
 {/block}

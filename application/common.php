@@ -44,3 +44,11 @@ function getImageByArr($arr){
 	array_shift($arr);
 	return $arr[0];
 }
+
+function getWewType($type){
+	if($type == 1){
+		return '企业新闻';
+	}else{
+		return '常见问题';
+	}
+}

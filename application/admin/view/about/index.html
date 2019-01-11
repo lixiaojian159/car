@@ -1,0 +1,57 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+    <div class="x-nav" style="margin-bottom: 50px">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">关于我们</a>
+        <a>
+          <cite>{$about.title}</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <form class="layui-form" action="">
+		<div class="layui-container">
+			<div class="layui-row">
+
+				<div class="layui-col-md12">
+					<script id="container" name="content" type="text/plain">
+                      这里写你的初始化内容
+                  </script>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-container" style="margin-top: 50px">
+			<div class="layui-row">
+				<div class="layui-col-md12">
+					<div class="layui-form-item">
+					    <div class="layui-input-block">
+					      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+					      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+<!-- 配置文件 -->
+<script type="text/javascript" src="/static/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/static/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container',{
+      initialFrameHeight:600
+    });
+    ue.ready(function() {
+        //设置编辑器的内容
+        ue.setContent('{$about.content}');
+        //获取html内容，返回: <p>hello</p>
+        var html = ue.getContent();
+    });
+</script>
+  </body>
+{/block}

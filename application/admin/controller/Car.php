@@ -23,7 +23,7 @@ class Car extends Controller{
 		$count = CarModel::where('cate_id',$cateId)->count();
 		$this->view->assign('count',$count);
 		//获取叉车列表
-		$cars = CarModel::where('cate_id',$cateId)->order('npx','desc')->paginate(3);
+		$cars = CarModel::where('cate_id',$cateId)->order('npx','desc')->paginate(3,false,['query'=>request::param()]);
 		//dump($cars);
 		$this->view->assign('cars',$cars);
 		return $this->view->fetch();

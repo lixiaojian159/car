@@ -1,0 +1,145 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">新闻中心</a>
+        <a>
+          <cite>企业新闻和常见问题</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+		    <div class="layui-input-inline">
+		      <select lay-filter="aihao" name="type">
+		        <option value="1" {eq name="$type" value="1"}selected{/eq}>企业新闻</option>
+		        <option value="2" {eq name="$type" value="2"}selected{/eq}>常见问题</option>
+		      </select>
+		    </div>
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+        <a class="layui-btn" href="{:url('admin/Wew/add')}"><i class="layui-icon"></i>添加</a>
+        <span class="x-right" style="line-height:40px">共有数据：{$count} 条</span>
+      </xblock>
+      <table class="layui-table layui-form">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>ID</th>
+            <th>类型</th>
+            <th>标题</th>
+            <th>图片</th>
+            <th>描述</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+          {volist name="wews" id="wew"}
+          <tr>
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='{$wew.id}'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{$wew.id}</td>
+            <td>{$wew.type|getWewType}</td>
+            <td>{$wew.title}</td>
+            <td><img src="{$wew.pic}" width="50"></td>
+            <td>{$wew.descs}</td>
+            <td>{$wew.create_time}</td>
+            <td class="td-status">
+              <input type="checkbox" name="switch"  lay-text="开启|停用"  {eq name="$wew.status" value="1"}checked=""{/eq} lay-skin="switch" lay-filter="switchTest" data-id="{$wew.id}">
+            <td class="td-manage">
+              <a title="编辑" href="{:url('admin/Wew/update',['id'=>$wew.id])}">
+                <i class="layui-icon">&#xe642;</i>
+              </a>
+              <a title="删除" onclick="member_del(this,'{$wew.id}')" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+              </a>
+            </td>
+          </tr>
+          {/volist}
+        </tbody>
+      </table>
+      <div class="page">
+        <div>
+          {$wews|raw}
+        </div>
+      </div>
+
+    </div>
+    <script>
+      layui.use(['form', 'layedit', 'laydate'], function(){
+			  var form = layui.form
+			  ,layer = layui.layer
+			  ,layedit = layui.layedit
+			  ,laydate = layui.laydate;
+
+			  //监听指定开关
+			  form.on('switch(switchTest)', function(data){
+			  	var id = $(this).attr('data-id');
+			  	var status;
+			  	if(this.checked){
+			  		status = 1;
+			  	}else{
+			  		status = 0;
+			  	}
+			  	var url = '{:url("admin/Wew/status")}';
+			  	$.post(url,{'id':id,'status':status});
+			  });
+        
+      });
+
+
+      /*用户-删除*/
+      function member_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+              if(index){
+              	var url = '{:url("admin/Wew/del")}';
+              	$.post(url,{'id':id},function(result){
+              		if(result.code){
+	              		$(obj).parents("tr").remove();
+	                    layer.msg(result.msg,{icon:1,time:1000});
+					}else{
+						layer.msg(result.msg,{icon:1,time:1000});
+					}
+              	},'JSON')
+              }
+          });
+      }
+
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？',function(index){
+        	if(index){
+        		var dataPost = {'ids':data};
+        		var url = '{:url("admin/Wew/delAll")}';
+        		$.post(url,dataPost,function(result){
+        			if(result.code){
+        				//捉到所有被选中的，发异步进行删除
+			            layer.msg('删除成功', {icon: 1});
+			            $(".layui-form-checked").not('.header').parents('tr').remove();
+        			}
+        		},'JSON');
+        	}
+        });
+      }
+    </script>
+  </body>
+
+{/block}

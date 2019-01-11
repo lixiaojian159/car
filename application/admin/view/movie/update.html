@@ -1,0 +1,144 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+    <div class="x-body">
+        <form class="layui-form" action="{:url('admin/Movie/updateDo')}" enctype="" method="post">
+
+        	<div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+        				<blockquote class="layui-elem-quote">
+				            <span class="x-red">注意:</span>先把视频上传到第三方视频网站,例如：爱奇艺,腾讯视频... 再把视频链接粘贴在这里
+				        </blockquote>
+        			</div>
+        		</div>
+        	</div>
+
+          <input type="hidden" name="id" value="{$movie.id}">
+
+        	<div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+			        	<div class="layui-form-item">
+						    <label class="layui-form-label">视频题目</label>
+						    <div class="layui-input-block">
+						      <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入视频题目" class="layui-input" value="{$movie.title}">
+						    </div>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+
+		    <div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+			        	<div class="layui-form-item">
+						    <label class="layui-form-label">视频地址</label>
+						    <div class="layui-input-block">
+						      <input type="text" name="src" lay-verify="title" autocomplete="off" placeholder="请输入视频地址" class="layui-input" value="{$movie.src}">
+						    </div>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+
+        <div class="layui-container">
+            <div class="layui-row">
+              <div class="layui-col-md12">
+                <div class="layui-form-item">
+                <label class="layui-form-label">展示图片</label>
+                <div class="layui-input-block">
+                  <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <div class="layui-upload-list">
+                      <img class="layui-upload-img" id="demo1" width="200" src="{$movie.pic}">
+                      <p id="demoText"></p>
+                      <input type="hidden" name="pic" id="pic">
+                    </div>
+                  </div>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-container">
+            <div class="layui-row">
+              <div class="layui-col-md12">
+                <div class="layui-form-item">
+                <label class="layui-form-label">视频</label>
+                <div class="layui-input-block">
+                  <video width="320" height="240" controls>
+                    <source src="{$movie.src}" type="video/mp4">
+                  您的浏览器不支持Video标签。
+                  </video>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+
+		    <div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+					    <div class="layui-form-item">
+						    <div class="layui-input-block">
+						      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>	
+        </form>
+    </div>
+<script>
+layui.use(['form', 'layedit', 'laydate','upload'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,upload = layui.upload;
+
+   //普通图片上传
+  var uploadInst = upload.render({
+    elem: '#test1'
+    ,url: '{:url("admin/Image/upload")}'
+    ,before: function(obj){
+      //预读本地文件示例，不支持ie8
+      obj.preview(function(index, file, result){
+        $('#demo1').attr('src', result); //图片链接（base64）
+      });
+    }
+    ,done: function(res){
+      //如果上传失败
+      if(res.code > 0){
+        return layer.msg('上传失败');
+      }
+      //上传成功
+      $('#pic').val(res.data.url);
+    }
+  });
+
+
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  	var dataPost = data.field;
+  	var url = '{:url("admin/Movie/updateDo")}';
+  	$.post(url,dataPost,function(result){
+  		if(result.code){
+  			layer.alert(result.msg, {icon: 6},function () {
+                // 获得frame索引
+                var index = parent.layer.getFrameIndex(window.name);
+                //关闭当前frame
+                parent.layer.close(index);
+            });
+  		}
+  	},'JSON');
+    return false;
+  });
+
+
+})
+</script>
+</body>
+
+{/block}

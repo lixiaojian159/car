@@ -1,0 +1,162 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+    <div class="x-body">
+        <form class="layui-form" action="{:url('admin/Wew/updateDo')}" enctype="" method="post">
+
+        	<div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+        				<blockquote class="layui-elem-quote">
+				            <span class="x-red">注意:</span>类型为'常见问题',只需要填写'标题'和'内容',其余部分不用填写
+				        </blockquote>
+        			</div>
+        		</div>
+        	</div>
+
+        	<input type="hidden" name="id" value="{$wew.id}">
+
+        	<div class="layui-container">
+        		<div class="layui-row">
+        			 <div class="layui-col-md4">
+        			 	<div class="layui-form-item">
+						    <label class="layui-form-label">类型</label>
+						    <div class="layui-input-block">
+						        <select name="type" lay-verify="" id="type">
+								    <option value="">请选择...</option>
+								    <option value="1" {eq name="$wew.type" value="1"}selected{/eq}>企业新闻</option>
+								    <option value="2" {eq name="$wew.type" value="2"}selected{/eq}>常见问题</option>
+								</select>
+						    </div>
+						</div>
+        			 </div>
+        			 <div class="layui-col-md8">
+        			 	<div class="layui-form-item">
+						    <label class="layui-form-label">标题</label>
+						    <div class="layui-input-block">
+						        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" value="{$wew.title}">
+						    </div>
+						</div>
+        			 </div>
+        		</div>
+        	</div>
+
+        	{eq name="$wew.type" value="1"}
+        	<div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+			        	<div class="layui-form-item">
+						    <label class="layui-form-label">描述</label>
+						    <div class="layui-input-block">
+						      <input type="text" name="descs" lay-verify="title" autocomplete="off" placeholder="请输入描述(只有企业新闻填写此处)" class="layui-input" value="{$wew.descs}">
+						    </div>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+		    {/eq}
+
+		    <div class="layui-container" style="margin-top: 80px">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+			        	<div class="layui-form-item">
+						    <label class="layui-form-label">内容</label>
+						    <div class="layui-input-block">
+						        <script id="container" name="content" type="text/plain">这里写你的初始化内容</script>
+						    </div>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+
+            {eq name="$wew.type" value="1"}
+		    <div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+			        	<div class="layui-form-item">
+						    <label class="layui-form-label">图片</label>
+						    <div class="layui-input-block">
+						        <div class="layui-upload">
+									<button type="button" class="layui-btn" id="test1">上传图片</button>
+									<div class="layui-upload-list">
+									    <img class="layui-upload-img" id="demo1" width="200" src="{$wew.pic}">
+									    <p id="demoText"></p>
+									    <input type="hidden" name="pic" id="pic">
+									</div>
+								</div>
+						    </div>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+
+		   {/eq}
+
+		    <div class="layui-container">
+        		<div class="layui-row">
+        			<div class="layui-col-md12">
+					    <div class="layui-form-item">
+						    <div class="layui-input-block">
+						      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>	
+        </form>
+    </div>
+    <script>
+        layui.use(['form','layer','upload'], function(){
+            $ = layui.jquery;
+            var form = layui.form
+            ,layer = layui.layer
+            ,upload = layui.upload;
+
+         //普通图片上传
+		var uploadInst = upload.render({
+		    elem: '#test1'
+		    ,url: '{:url("admin/Image/upload")}'
+		    ,before: function(obj){
+		      //预读本地文件示例，不支持ie8
+		      obj.preview(function(index, file, result){
+		        $('#demo1').attr('src', result); //图片链接（base64）
+		      });
+		    }
+		    ,done: function(res){
+		      //如果上传失败
+		      if(res.code > 0){
+		        return layer.msg('上传失败');
+		      }
+		      //上传成功
+		      $('#pic').val(res.data.url);
+		    }
+		});
+
+        });
+    </script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="/static/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/static/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container',{
+      initialFrameHeight:600
+    });
+    ue.ready(function() {
+
+        //设置编辑器的内容
+        ue.setContent('{$wew.content|raw}');
+        //获取html内容，返回: <p>hello</p>
+        var html = ue.getContent();
+    });
+</script>
+<script>
+	$("#type").click(function(){
+		alert(123);
+	})
+</script>
+</body>
+
+{/block}

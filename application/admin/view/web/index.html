@@ -1,0 +1,113 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+	<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">网站管理</a>
+        <a>
+          <cite>基本信息</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+        <form class="layui-form" action="">
+        	<input type="hidden" name="id" value="1">
+        	<div class="layui-form-item">
+			    <label class="layui-form-label">网站名称</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="name" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.name}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">网站关键词</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="keywords" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.keywords}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">网站描述</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="descs" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.descs}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">联系人</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="username" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.username}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">公司地址</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="address" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.address}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">公司电话</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="tel" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.tel}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">公司邮箱</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="email" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.email}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">公司QQ</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="qq" lay-verify="name" autocomplete="off" class="layui-input" value="{$web.qq}">
+			    </div>
+			</div>
+
+			 <div class="layui-form-item">
+			    <label class="layui-form-label">网站状态</label>
+			    <div class="layui-input-block">
+			      <input type="checkbox" {eq name="$web.status" value="1"}checked=""{/eq} name="open" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+			    </div>
+			  </div>
+
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			    </div>
+			</div>
+
+        </form>
+    </div>
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+
+  
+  //监听指定开关
+  form.on('switch(switchTest)', function(data){
+  	console.log(data);
+    layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+      offset: '6px'
+    });
+    layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+  });
+
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  	var dataPost = data.field;
+  	var url = '{:url("admin/Web/add")}';
+  	$.post(url,dataPost,function(result){
+
+  	},'JSON');
+    return false;
+  });
+})
+</script>
+</body>
+
+{/block}

@@ -12,7 +12,9 @@
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
-    <form class="layui-form" action="">
+    <form class="layui-form" action="{:url('admin/About/addDo')}" method="post">
+
+    	<input type="hidden" name="id" value="{$about.id}">
 		<div class="layui-container">
 			<div class="layui-row">
 
@@ -48,7 +50,7 @@
     });
     ue.ready(function() {
         //设置编辑器的内容
-        ue.setContent('{$about.content}');
+        ue.setContent('{$about.content|raw}');
         //获取html内容，返回: <p>hello</p>
         var html = ue.getContent();
     });

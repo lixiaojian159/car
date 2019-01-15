@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2019-01-14 10:29:27
+-- 生成日期： 2019-01-15 10:19:13
 -- 服务器版本： 10.1.37-MariaDB
 -- PHP 版本： 7.2.13
 
@@ -203,6 +203,26 @@ CREATE TABLE `unslider` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(5) UNSIGNED NOT NULL COMMENT '主键',
+  `name` varchar(20) NOT NULL COMMENT '用户名',
+  `password` varchar(40) NOT NULL COMMENT '密码',
+  `salt` varchar(10) NOT NULL COMMENT '盐'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `user`
+--
+
+INSERT INTO `user` (`id`, `name`, `password`, `salt`) VALUES
+(1, 'admin', '04522abf42bb8ad979fe66948402bc0d', 'hello');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `web`
 --
 
@@ -224,7 +244,7 @@ CREATE TABLE `web` (
 --
 
 INSERT INTO `web` (`id`, `name`, `keywords`, `descs`, `username`, `address`, `email`, `tel`, `qq`, `status`) VALUES
-(1, '网站名称', '网站关键词', '网站描述', '联系人', '公司地址', '公司邮箱', '公司电话', 'QQ号', 0);
+(1, '中国合力', '网站关键词', '网站描述', '联系人', '公司地址', '公司邮箱', '公司电话', 'QQ号', 1);
 
 -- --------------------------------------------------------
 
@@ -292,6 +312,12 @@ ALTER TABLE `unslider`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- 表的索引 `web`
 --
 ALTER TABLE `web`
@@ -341,7 +367,13 @@ ALTER TABLE `peijian`
 -- 使用表AUTO_INCREMENT `unslider`
 --
 ALTER TABLE `unslider`
-  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
+
+--
+-- 使用表AUTO_INCREMENT `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `web`

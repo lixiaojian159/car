@@ -3,12 +3,13 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use think\Facade\Request;
 
 use app\admin\model\Movie as MovieModel;
 
-class Movie extends Controller{
+class Movie extends Base{
 
 	public function index(){
 		//获取视频

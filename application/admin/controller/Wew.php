@@ -3,12 +3,13 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use think\facade\Request;
 
 use app\admin\model\Wew as WewModel;
 
-class Wew extends Controller{
+class Wew extends Base{
 
 	public function index(){
         $type = Request::param('type') ? Request::param('type') : 1;

@@ -1,0 +1,83 @@
+{extend name="layouts:base2" /}
+
+{block name="main"}
+<body>
+	<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">网站管理</a>
+        <a>
+          <cite>管理员信息</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+        <form class="layui-form" action="">
+        	<input type="hidden" name="id" value="1">
+        	<div class="layui-form-item">
+			    <label class="layui-form-label">登录名</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="name" lay-verify="name" autocomplete="off" class="layui-input" value="{$user.name}">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">密码</label>
+			    <div class="layui-input-block">
+			      <input type="password" name="password" lay-verify="name" autocomplete="off" class="layui-input">
+			    </div>
+			</div>
+			<div class="layui-form-item">
+			    <label class="layui-form-label">确认密码</label>
+			    <div class="layui-input-block">
+			      <input type="password" name="repassword" lay-verify="name" autocomplete="off" class="layui-input">
+			    </div>
+			</div>
+			<div class="layui-form-item" style="position: relative">
+			    <label class="layui-form-label">验证码</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="code" lay-verify="name" autocomplete="off" class="layui-input" style="width: 100px">
+			      <img src="{:url('admin/Verify/makeVerify')}" width="150px" style="position: absolute;top: 0;left: 150px;cursor: pointer" id="pic">
+			    </div>
+			</div>
+
+
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			    </div>
+			</div>
+
+        </form>
+    </div>
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+
+
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  	var dataPost = data.field;
+  	var url = '{:url("admin/User/add")}';
+  	$.post(url,dataPost,function(result){
+  		if(result.code){
+  			layer.msg(result.msg); 
+  		}else{
+  			layer.msg(result.msg);
+  		}
+  	},'JSON');
+    return false;
+  });
+})
+
+$("#pic").click(function(){
+  var src = '{:url("admin/Verify/makeVerify")}' + '?random=' + Math.random();
+  $("#pic").attr('src',src);
+})
+</script>
+</body>
+{/block}

@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use think\facade\Request;
 
@@ -10,7 +11,7 @@ use app\admin\model\Cate as CateModel;
 
 use app\admin\facade\Cate as CateValidate;
 
-class Cate extends Controller{
+class Cate extends Base{
 
 	public function index(){
 		//获取总条数

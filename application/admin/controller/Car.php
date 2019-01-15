@@ -6,10 +6,11 @@ use think\Controller;
 
 use app\admin\model\Cate;
 use app\admin\model\Car as CarModel;
+use app\admin\common\controller\Base;
 
 use think\facade\Request;
 
-class Car extends Controller{
+class Car extends Base{
 
     //叉车列表
 	public function index(){

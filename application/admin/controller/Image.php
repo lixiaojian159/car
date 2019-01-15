@@ -3,8 +3,9 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
-class Image extends Controller{
+class Image extends Base{
 	
 	//图片上传
 	public function upload(){

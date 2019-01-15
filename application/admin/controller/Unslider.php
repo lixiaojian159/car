@@ -3,12 +3,13 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use think\facade\Request;
 
 use app\admin\model\Unslider as UnsliderModel;
 
-class Unslider extends Controller{
+class Unslider extends Base{
 
 	public function index(){
 		$count = UnsliderModel::count();

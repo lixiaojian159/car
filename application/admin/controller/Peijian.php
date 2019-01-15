@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use app\admin\model\Cate;
 use app\admin\model\Peijian as PeijianModel;
@@ -11,7 +12,7 @@ use app\admin\facade\Peijian as PeijianValidate;
 use think\facade\Request;
 
 
-class Peijian extends Controller{
+class Peijian extends Base{
     
     //叉车配件的列表
 	public function index(){

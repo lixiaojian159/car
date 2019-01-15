@@ -3,12 +3,13 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use app\admin\common\controller\Base;
 
 use think\facade\Request;
 
 use think\Db;
 
-class About extends Controller{
+class About extends Base{
 
     //企业简介和品牌理念
 	public function index(){
